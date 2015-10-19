@@ -8,18 +8,16 @@
 #include <sys/stat.h>
 #include <inttypes.h>
 
+void usage(char *argv[]) {
+    printf("Usage:\n"
+                   "\t%s encode image input_file\n"
+                   "\t%s decode image output_file\n", argv[0], argv[0]);
+    return;
+}
 
 int main(int argc, char *argv[]) {
-    if(argc < 2) {
-        fprintf(stderr, "decode or encode?\n");
-        return -1;
-    }
-    if(argc < 3) {
-        fprintf(stderr, "Specify path to image!\n");
-        return -1;
-    }
     if(argc < 4) {
-        fprintf(stderr, "Specify path to data!\n");
+        usage(argv);
         return -1;
     }
 
@@ -51,7 +49,6 @@ int main(int argc, char *argv[]) {
             return -1;
         }
         fclose(fp);
-        printf("Read %"PRIi64" Bytes from %s\n", image_file_size, argv[3]);
 
         if (embed_data(image, x, y, channels, buffer, (size_t) image_file_size)) {
             fprintf(stderr, "Secret data too large!\n");
@@ -84,13 +81,14 @@ int main(int argc, char *argv[]) {
         }
         if (fwrite(extracted_data, 1, max_size_extract, fp) != max_size_extract) {
             perror(NULL);
+            return -1;
         }
         fclose(fp);
 
         free(extracted_data);
         free(image);
     } else {
-        fprintf(stderr, "decode or encode?");
+        fprintf(stderr, "unrecognized mode");
         return -1;
     }
     return 0;
