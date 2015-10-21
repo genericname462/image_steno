@@ -36,6 +36,8 @@ int alt_get_bit(const void *data, size_t position);
 
 void set_bit(uint8_t *data, size_t position, int bit);
 
+void alt_set_bit(uint8_t *data, size_t position, int bit);
+
 int embed_data(uint8_t *image, const uint32_t x, const uint32_t y, const uint32_t channels, const uint8_t *secret,
                const size_t len_secret);
 

@@ -2,24 +2,32 @@
 #include <assert.h>
 
 inline int get_bit(const void *data, const size_t position) {
-    size_t byteoffset = position/8; // Full bytes
-    size_t bitoffset = 7 - position%8; // Remaining bits
-    return (((uint8_t*)data)[byteoffset] >> bitoffset) & 0x01;
+    size_t byteoffset = position / 8; // Full bytes
+    size_t bitoffset = 7 - position % 8; // Remaining bits
+    return (((uint8_t *) data)[byteoffset] >> bitoffset) & 0x01;
 }
 
 inline int alt_get_bit(const void *data, const size_t position) {
-    return (((uint8_t*)data)[position / 8] >> (position % 8)) & 0x01;
+    return (((uint8_t *) data)[position / 8] >> (position % 8)) & 0x01;
 }
 
 inline void set_bit(uint8_t *data, const size_t position, const int bit) {
-    size_t byteoffset = position/8; // Full bytes
-    size_t bitoffset = 7 - position%8; // Remaining bits
+    size_t byteoffset = position / 8; // Full bytes
+    size_t bitoffset = 7 - position % 8; // Remaining bits
     if (bit) { // Set bit to 1
         data[byteoffset] |= 1 << bitoffset;
     } else { // Clear bit to 0
         data[byteoffset] &= ~(1 << bitoffset);
     }
     return;
+}
+
+inline void alt_set_bit(uint8_t *data, size_t position, int bit) {
+    if (bit) { // Set bit to 1
+        data[position / 8] |= 1 << position % 8;
+    } else { // Clear bit to 0
+        data[position / 8] &= ~(1 << position % 8);
+    }
 }
 
 int embed_data(uint8_t *image, const uint32_t x, const uint32_t y, const uint32_t channels,
