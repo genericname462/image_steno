@@ -1,5 +1,4 @@
 #include "image_steno.h"
-#include <assert.h>
 
 inline int get_bit(const void *data, const size_t position) {
     size_t byteoffset = position / 8; // Full bytes
@@ -30,10 +29,9 @@ inline void alt_set_bit(uint8_t *data, size_t position, int bit) {
     }
 }
 
-int embed_data(uint8_t *image, const uint32_t x, const uint32_t y, const uint32_t channels,
-               const uint8_t *secret, const size_t len_secret) {
-    assert(channels == 4);
-    if (len_secret * 8 > x * y * 3) {
+int embed_data(uint8_t *image, const size_t len_image, const uint8_t *secret, const size_t len_secret) {
+    // Check if secret can even fit into the image
+    if (len_secret * 8 * 4 > len_image * 3) {
         return -1;
     }
 
@@ -52,14 +50,11 @@ int embed_data(uint8_t *image, const uint32_t x, const uint32_t y, const uint32_
     return 0;
 }
 
-int extract_data(const uint8_t *image, const uint32_t x, const uint32_t y, const uint32_t channels,
-                 uint8_t *extract, const size_t max_len_extract) {
-    assert(channels == 4);
-
+int extract_data(const uint8_t *image, const size_t image_len, uint8_t *extract, const size_t max_len_extract) {
     size_t byte_position_image = 0;
     size_t bit_position_extract = 0;
 
-    while (byte_position_image < x * y * channels && bit_position_extract < max_len_extract * 8) {
+    while (byte_position_image < image_len && bit_position_extract < max_len_extract * 8) {
         // Skip alpha byte
         if (byte_position_image % 4 == 3) {
             ++byte_position_image;

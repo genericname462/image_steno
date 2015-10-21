@@ -38,10 +38,8 @@ void set_bit(uint8_t *data, size_t position, int bit);
 
 void alt_set_bit(uint8_t *data, size_t position, int bit);
 
-int embed_data(uint8_t *image, const uint32_t x, const uint32_t y, const uint32_t channels, const uint8_t *secret,
-               const size_t len_secret);
+int embed_data(uint8_t *image, const size_t len_image, const uint8_t *secret, const size_t len_secret);
 
-int extract_data(const uint8_t *image, const uint32_t x, const uint32_t y, const uint32_t channels, uint8_t *extract,
-                 const size_t max_len_extract);
+int extract_data(const uint8_t *image, const size_t image_len, uint8_t *extract, const size_t max_len_extract);
 
 #endif //STUFF_IMAGE_STENO_H

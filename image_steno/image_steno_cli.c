@@ -36,21 +36,21 @@ int main(int argc, char *argv[]) {
             perror(NULL);
             return -1;
         }
-        int64_t image_file_size = s.st_size;
+        int64_t secret_file_size = s.st_size;
 
         FILE *fp;
         if ((fp = fopen(argv[3], "rb")) == NULL) {
             perror(NULL);
             return -1;
         }
-        uint8_t *buffer = malloc((size_t) image_file_size + 1);
-        if (fread(buffer, 1, (size_t) image_file_size, fp) != image_file_size) {
+        uint8_t *buffer = malloc((size_t) secret_file_size + 1);
+        if (fread(buffer, 1, (size_t) secret_file_size, fp) != secret_file_size) {
             perror(NULL);
             return -1;
         }
         fclose(fp);
 
-        if (embed_data(image, x, y, channels, buffer, (size_t) image_file_size)) {
+        if (embed_data(image, x*y*channels, buffer, (size_t) secret_file_size)) {
             fprintf(stderr, "Secret data too large!\n");
             return -1;
         }
@@ -67,11 +67,13 @@ int main(int argc, char *argv[]) {
         if (image == NULL) {
             perror(stbi_failure_reason());
             return -1;
+        } else {
+            channels = 4; // contains the number of channels the image would have had if we had not forced it to 4.
         }
 
         size_t max_size_extract = (size_t) (x * y * 3) / 8;
         uint8_t *extracted_data = malloc(max_size_extract);
-        extract_data(image, x, y, channels, extracted_data, max_size_extract);
+        extract_data(image, x*y*channels, extracted_data, max_size_extract);
         //dumpHex(extracted_data, 16);
 
         FILE *fp;
