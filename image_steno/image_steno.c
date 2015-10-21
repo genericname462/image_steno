@@ -21,7 +21,7 @@ inline void set_bit(uint8_t *data, const size_t position, const int bit) {
     return;
 }
 
-inline void alt_set_bit(uint8_t *data, size_t position, int bit) {
+inline void alt_set_bit(uint8_t *data, const size_t position, const int bit) {
     if (bit) { // Set bit to 1
         data[position / 8] |= 1 << position % 8;
     } else { // Clear bit to 0

@@ -41,7 +41,8 @@ int consistency_test() {
     for (unsigned int j = 0; j < data_size; ++j) {
         if (memcmp(&data.d[j], &output_data[j], 1) != 0) {
             printf("Fail at Byte %i of %"PRIu64". Expected: %2X, got: %2X\n", j, data_size, data.d[j], output_data[j]);
-            return 1;
+            result = 1;
+            goto fail;
         }
     }
 
